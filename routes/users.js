@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
   try {
     const user = await UserModel(req.body);
     user.save();
-    res.json('the user has been successfully created');
+    res.json('the user has been  created successfully');
   } catch (error) {
     console.log(error);
   }
