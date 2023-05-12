@@ -3,6 +3,7 @@ const app = express();
 const port = 5000;
 const mongoose = require('mongoose');
 const Router = require('./routes');
+
 app.use(express.json());
 app.use('/', Router);
 

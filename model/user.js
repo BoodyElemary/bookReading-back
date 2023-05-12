@@ -1,32 +1,33 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
   firstName: {
     type: String,
     required: true,
-    message: 'the firstName is required',
+    message: "The First Name is Required",
   },
   lastName: {
     type: String,
     required: true,
-    message: 'the lastName is required',
+    message: "The Last Name is Required",
   },
   email: {
     type: String,
+    unique: true,
     validate: {
       validator: (email) => {
         const regex =
           /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         return regex.test(email);
       },
-      message: 'Invalid email address',
+      message: "Invalid E-mail Address",
     },
     required: true,
-    messageType: 'email is required ',
+    messageType: "E-mail is Required ",
   },
   password: String,
   Image: String,
 });
 
-const UserModel = mongoose.model('User', UserSchema);
+const UserModel = mongoose.model("User", UserSchema);
 module.exports = UserModel;

@@ -1,40 +1,14 @@
-const express = require('express');
-
-const UserModel = require('../model/user');
-
+const express = require("express");
 const router = express.Router();
+const userController = require("../controllers/userController");
+
 //get all users
-router.get('/', async (req, res) => {
-  try {
-    const users = await UserModel.find();
-    res.json(users);
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.get("/", userController.getAll);
 
 //get single user
-
-router.get('/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await UserModel.findById({ _id: id });
-    res.json(user);
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.get("/:id", userController.getOne);
 
 //add user
-
-router.post('/', async (req, res) => {
-  try {
-    const user = await UserModel(req.body);
-    user.save();
-    res.json('the user has been  created successfully');
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.post("/", userController.addOne);
 
 module.exports = router;
