@@ -46,7 +46,7 @@ const editOne = async (req, res) => {
   try {
     const bookID = req.params.id;
     const book = await BooksModel.findByIdAndUpdate(bookID, {$set: req.body}, {new: true});
-    res.json({"message":"Book updated successfully", "data": book});
+    res.json({"success":true, "message":"Book updated successfully", "data": book});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -56,7 +56,7 @@ const deleteOne = async (req, res) => {
   try {
     const bookID = req.params.id;
     const book = await BooksModel.findByIdAndDelete(bookID);
-    res.json({"message":"Book Deleted successfully", "data": book});
+    res.json({"success":true, "message":"Book Deleted successfully", "data": book});
   } catch (error) {
     res.status(500).json(error);
   }
