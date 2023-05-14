@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
 const CategoriesModel = require("../model/categories");
 
 const getAll = async (req, res) => {
   try {
-    const categories = await CategoriesModel.find({}, { __v: 0 })
+    const categories = await CategoriesModel.find({}, { __v: 0 }).populate("books")
     res.json(categories);
   } catch (error) {
     res.status(500).json(error);
@@ -13,7 +12,7 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const categoryID = req.params.id;
-    const category = await CategoriesModel.findById({ _id: categoryID });
+    const category = await CategoriesModel.findById({ _id: categoryID }).populate("books");
     if (category){
       res.json({"category": category});
     }
@@ -31,10 +30,11 @@ const addOne = async (req, res) => {
     if (existCategory){
       res.json({"success": false, "message": "this category arleady exists"})
     }
-    await CategoriesModel.create(req.body)
-    .then((category)=>{res.json({"success": true, "message": "category added successfully", "data": category });})
-    .catch((error)=>{res.json({"success": false, "errors": error});})
-
+    else{
+      await CategoriesModel.create(req.body)
+      .then((category)=>{res.json({"success": true, "message": "category added successfully", "data": category });})
+      .catch((error)=>{res.json({"success": false, "errors": error});})
+    }
   } catch (error) {
     res.status(500).json(error);
   }
@@ -43,8 +43,12 @@ const addOne = async (req, res) => {
 const editOne = async (req, res) => {
   try {
     const categoryID = req.params.id;
+    const existCategory = await CategoriesModel.findOne({"categoryName": req.body.categoryName, "_id":{$ne:categoryID}})
+    if (existCategory){
+      res.json({"success": false, "message": "this category arleady exists"})
+    }
     const category = await CategoriesModel.findByIdAndUpdate(categoryID, {$set: req.body}, {new: true});
-    res.json({"message":"category updated successfully", "data": category});
+    res.json({"success":true, "message":"category updated successfully", "data": category});
   } catch (error) {
     res.status(500).json(error);
   }

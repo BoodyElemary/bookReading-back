@@ -16,7 +16,15 @@ const AuthorSchema = mongoose.Schema({
     required: true,
     messageType: "Date of birth is Required ",
   },
-  image: { type: String }
+  image: { type: String, default:null},
+  books:[
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Book",
+      required: true, 
+    }
+  ]
+
 });
 
 const AuthorModel = mongoose.model("Author", AuthorSchema);

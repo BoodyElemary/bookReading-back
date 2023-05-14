@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
 const authorsModel = require("../model/authors");
 
 const getAll = async (req, res) => {
   try {
-    const authors = await authorsModel.find({}, { __v: 0 })
+    const authors = await authorsModel.find({}, { __v: 0 }).populate("books")
     res.json(authors);
   } catch (error) {
     res.status(500).json(error);
@@ -13,7 +12,7 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const authorID = req.params.id;
-    const author = await authorsModel.findById({ _id: authorID });
+    const author = await authorsModel.findById({ _id: authorID }).populate("books")
     if (author){
       res.json({"author": author});
     }
