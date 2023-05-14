@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
 const BooksModel = require("../model/books")
+const CategoriesModel = require("../model/categories")
+const AuthorsModel = require("../model/authors")
 
 const getAll = async (req, res) => {
   try {
@@ -34,6 +35,8 @@ const getOne = async (req, res) => {
 const addOne = async (req, res) => {
   try {
     const book = await BooksModel(req.body);
+    await CategoriesModel.findByIdAndUpdate(req.body.category, { $push: { books: book._id }})
+    await AuthorsModel.findByIdAndUpdate(req.body.author, { $push: { books: book._id }})
     await book.save();
     res.json({"success":true, "data": book,"message":"Book added successfully"});
   } catch (error) {
