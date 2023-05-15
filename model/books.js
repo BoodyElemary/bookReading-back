@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const BooksSchema = mongoose.Schema({
+const BooksSchema = new mongoose.Schema({
   bookName: {
     type: String,
     required: true,
@@ -13,23 +13,23 @@ const BooksSchema = mongoose.Schema({
     type: Number,
     max: 5,
     min: 0,
-    default:0
+    default: 0,
   },
   category: {
     type: mongoose.Types.ObjectId,
-    ref: "Category",
+    ref: 'Category',
     required: true,
   },
   author: {
     type: mongoose.Types.ObjectId,
-    ref: "Author",
+    ref: 'Author',
     required: true,
   },
   user_review: [
     {
       userID: {
         type: mongoose.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
         required: true,
       },
       review: {
@@ -40,5 +40,5 @@ const BooksSchema = mongoose.Schema({
   ],
 });
 
-const BooksModels = mongoose.model("Book", BooksSchema);
+const BooksModels = mongoose.model('Book', BooksSchema);
 module.exports = BooksModels;

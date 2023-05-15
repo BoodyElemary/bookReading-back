@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const UserModel = mongoose.model("User");
+const mongoose = require('mongoose');
+const UserModel = mongoose.model('User');
 
 const getAll = async (req, res) => {
   try {
@@ -24,7 +24,7 @@ const addOne = async (req, res) => {
   try {
     const user = await UserModel(req.body);
     await user.save();
-    res.json("User Created Successfully");
+    res.json('User Created Successfully');
   } catch (error) {
     console.log(error);
   }
