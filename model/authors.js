@@ -1,31 +1,30 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const AuthorSchema = mongoose.Schema({
+const AuthorSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
-    message: "The First Name is Required",
+    message: 'The First Name is Required',
   },
   lastName: {
     type: String,
     required: true,
-    message: "The Last Name is Required",
+    message: 'The Last Name is Required',
   },
-  dateOfBirth: { 
-    type: Date, 
+  dateOfBirth: {
+    type: Date,
     required: true,
-    messageType: "Date of birth is Required ",
+    messageType: 'Date of birth is Required ',
   },
-  image: { type: String, default:null},
-  books:[
+  image: { type: String, default: null },
+  books: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "Book",
-      required: true, 
-    }
-  ]
-
+      ref: 'Book',
+      required: true,
+    },
+  ],
 });
 
-const AuthorModel = mongoose.model("Author", AuthorSchema);
+const AuthorModel = mongoose.model('Author', AuthorSchema);
 module.exports = AuthorModel;
