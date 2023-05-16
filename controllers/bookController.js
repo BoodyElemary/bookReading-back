@@ -63,7 +63,7 @@ const addOne = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
+//todo fix the edit one method
 const editOne = async (req, res) => {
   try {
     const bookID = req.params.id;
