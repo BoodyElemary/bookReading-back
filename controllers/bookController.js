@@ -1,6 +1,7 @@
 const BooksModel = require('../model/books');
 const CategoriesModel = require('../model/categories');
 const AuthorsModel = require('../model/authors');
+const fs = require('fs');
 
 const getAll = async (req, res) => {
   try {
@@ -17,7 +18,7 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const bookID = req.params.id;
-    const book = await BooksModel.findById({ _id: bookID })
+    const book = await BooksModel.findById({ _id: bookID }, { __v: 0 })
       .populate('category')
       .populate('author')
       .populate('user_review.userID', { email: 0, password: 0, __v: 0 });
@@ -33,11 +34,26 @@ const getOne = async (req, res) => {
 
 const addOne = async (req, res) => {
   try {
-    const book = await BooksModel(req.body);
-    await CategoriesModel.findByIdAndUpdate(req.body.category, {
+    const { bookName, rate, category, author, user_review } = req.body;
+    const coverImg = req.file;
+    if (!req.file) {
+      res.status(404).json('please upload a book cover');
+    }
+
+    // const book = await BooksModel(req.body);
+    const book = new BooksModel({
+      bookName,
+      rate,
+      category,
+      author,
+      user_review,
+      cover: coverImg.path,
+    });
+
+    await CategoriesModel.findByIdAndUpdate(category, {
       $push: { books: book._id },
     });
-    await AuthorsModel.findByIdAndUpdate(req.body.author, {
+    await AuthorsModel.findByIdAndUpdate(author, {
       $push: { books: book._id },
     });
     await book.save();
@@ -50,9 +66,18 @@ const addOne = async (req, res) => {
 const editOne = async (req, res) => {
   try {
     const bookID = req.params.id;
+    const { bookName, rate, category, author, user_review } = req.body;
+    const coverImg = req.file;
+    if (!req.file) {
+      res.status(404).json('please upload a book cover');
+    }
+
     const book = await BooksModel.findByIdAndUpdate(
       bookID,
-      { $set: req.body },
+      {
+        $set: { bookName, rate, category, author, user_review },
+        cover: coverImg.path,
+      },
       { new: true },
     );
     res.json({
@@ -68,12 +93,17 @@ const editOne = async (req, res) => {
 const deleteOne = async (req, res) => {
   try {
     const bookID = req.params.id;
-    const book = await BooksModel.findByIdAndDelete(bookID);
-    res.json({
-      success: true,
-      message: 'Book Deleted successfully',
-      data: book,
+    const bookCoverPath = await BooksModel.findById(bookID, {
+      cover: true,
+      _id: false,
     });
+    console.log(bookCoverPath.cover);
+    // const book = await BooksModel.findByIdAndDelete(bookID);
+    // res.json({
+    //   success: true,
+    //   message: 'Book Deleted successfully',
+    //   data: book,
+    // });
   } catch (error) {
     res.status(500).json(error);
   }
