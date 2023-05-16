@@ -1,21 +1,21 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bookController = require("../controllers/bookController");
+const bookController = require('../controllers/bookController');
+const { uploadCover } = require('../middlewares/upload');
 
 // Get All books
-router.get("/", bookController.getAll);
+router.get('/', bookController.getAll);
 
 // Get one book
-router.get("/:id", bookController.getOne);
+router.get('/:id', bookController.getOne);
 
-// Post one book
-router.post("/", bookController.addOne);
+// add one book
+router.post('/', uploadCover.single('cover'), bookController.addOne);
 
 // update one book
-router.put("/:id", bookController.editOne);
+router.put('/:id', uploadCover.single('cover'), bookController.editOne);
 
 // delete one book
-router.delete("/:id", bookController.deleteOne);
-
+router.delete('/:id', bookController.deleteOne);
 
 module.exports = router;
