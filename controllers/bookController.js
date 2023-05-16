@@ -2,6 +2,7 @@ const BooksModel = require('../model/books');
 const CategoriesModel = require('../model/categories');
 const AuthorsModel = require('../model/authors');
 const fs = require('fs');
+const { error } = require('console');
 
 const getAll = async (req, res) => {
   try {
@@ -72,6 +73,17 @@ const editOne = async (req, res) => {
       res.status(404).json('please upload a book cover');
     }
 
+    const bookCoverPath = await BooksModel.findById(bookID, {
+      cover: true,
+      _id: false,
+    });
+    fs.unlink(bookCoverPath.cover, (error) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+    });
+
     const book = await BooksModel.findByIdAndUpdate(
       bookID,
       {
@@ -97,13 +109,18 @@ const deleteOne = async (req, res) => {
       cover: true,
       _id: false,
     });
-    console.log(bookCoverPath.cover);
-    // const book = await BooksModel.findByIdAndDelete(bookID);
-    // res.json({
-    //   success: true,
-    //   message: 'Book Deleted successfully',
-    //   data: book,
-    // });
+    fs.unlink(bookCoverPath.cover, (error) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+    });
+    const book = await BooksModel.findByIdAndDelete(bookID);
+    res.json({
+      success: true,
+      message: 'Book Deleted successfully',
+      data: book,
+    });
   } catch (error) {
     res.status(500).json(error);
   }
