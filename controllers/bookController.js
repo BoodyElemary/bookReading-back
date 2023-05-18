@@ -4,7 +4,7 @@ const AuthorsModel = require('../model/authors');
 const fs = require('fs');
 const { error } = require('console');
 
-const getAll = async (req, res) => {
+const getAll = async (req, res, next) => {
   try {
     const books = await BooksModel.find({}, { __v: 0 })
       .populate('category')
@@ -12,7 +12,7 @@ const getAll = async (req, res) => {
       .populate('user_review.userID', { email: 0, password: 0, __v: 0 });
     res.json(books);
   } catch (error) {
-    res.status(500).json(error);
+    next(error);
   }
 };
 
