@@ -16,8 +16,8 @@ module.exports = (req, res, next) => {
   }
 };
 
-module.exports.isAuther = (req, res, next) => {
-  if (req.decodedToken.role === "auther") {
+module.exports.isUser = (req, res, next) => {
+  if (req.decodedToken.role === "user") {
     next();
   } else {
     let error = new Error("Not authrized.");
@@ -36,9 +36,9 @@ module.exports.isAdmin = (req, res, next) => {
   }
 };
 
-module.exports.isSameAuther = (req, res, next) => {
+module.exports.isSameUser = (req, res, next) => {
   if (
-    req.decodedToken.role === "auther" &&
+    req.decodedToken.role === "user" &&
     req.decodedToken.id === req.body.id
   ) {
     next();
@@ -49,8 +49,8 @@ module.exports.isSameAuther = (req, res, next) => {
   }
 };
 
-module.exports.isAdminOrAuther = (req, res, next) => {
-  if (req.decodedToken.role === "admin" || eq.decodedToken.role === "auther") {
+module.exports.isAdminOrUser = (req, res, next) => {
+  if (req.decodedToken.role === "admin" || eq.decodedToken.role === "user") {
     next();
   } else {
     let error = new Error("Not authrized.");

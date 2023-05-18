@@ -1,22 +1,21 @@
-const authorModel = require("../model/authors");
+const userModel = require("../model/user");
 const adminModel = require("../model/admin");
 const jwt = require("jsonwebtoken");
-const tokenKey = process.env.SECRET_1;
 
 exports.login = async (req, res, next) => {
   try {
-    const auther = await authorModel.findOne({ email: req.body.email });
-    if (!auther) {
+    const user = await userModel.findOne({ email: req.body.email });
+    if (!user) {
       let error = new Error("Email or password is wrong.");
       error.status = 401;
       throw error;
-    } else if ((auther.password = req.body.password)) {
+    } else if ((user.password == req.body.password)) {
       let token = jwt.sign(
         {
-          id: auther._id,
-          role: "auther",
+          id: user._id,
+          role: "user",
         },
-        tokenKey,
+        process.env.SECRET_1,
         { expiresIn: "8h" }
       );
       res.status(200).json({ message: "ok", token });
@@ -43,7 +42,7 @@ exports.loginAdmin = async (req, res, next) => {
           id: admin._id,
           role: "admin",
         },
-        tokenKey,
+        process.env.SECRET_1,
         { expiresIn: "8h" }
       );
       res.status(200).json({ message: "ok", token });
