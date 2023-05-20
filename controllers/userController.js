@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const UserModel = mongoose.model('User');
+const mongoose = require("mongoose");
+const UserModel = mongoose.model("User");
 
 const getAll = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ const getOne = async (req, res) => {
     const id = req.params.id;
     const user = await UserModel.findById({ _id: id });
     if (!user) {
-      res.status(404).json('no such user');
+      res.status(404).json("no such user");
     }
     res.json(user);
   } catch (error) {
@@ -30,7 +30,7 @@ const addOne = async (req, res) => {
     if (!req.file) {
       return res
         .status(400)
-        .json({ success: false, message: 'Profile image is required.' });
+        .json({ success: false, message: "Profile image is required." });
     }
 
     const user = new UserModel({
@@ -41,7 +41,7 @@ const addOne = async (req, res) => {
       Image: profileImg.path,
     });
     await user.save();
-    res.json('User Created Successfully');
+    res.json("User Created Successfully");
   } catch (error) {
     console.log(error);
   }
@@ -54,7 +54,7 @@ const editOne = async (req, res) => {
     if (!req.file) {
       return res
         .status(400)
-        .json({ success: false, message: 'Profile image is required.' });
+        .json({ success: false, message: "Profile image is required." });
     }
     const userId = req.params.id;
     const user = await UserModel.findOneAndUpdate(
@@ -63,7 +63,7 @@ const editOne = async (req, res) => {
         $set: { firstName, lastName, email, password, Image: profileImg.path },
       },
       { new: true },
-      res.json('user was updated succesffuly'),
+      res.json("user was updated succesffuly")
     );
   } catch (error) {
     console.log(error);
@@ -74,11 +74,11 @@ const deleteOne = async (req, res) => {
   try {
     const id = req.params.id;
     const user = await UserModel.findByIdAndDelete({ _id: id });
-    res.json('User Deleted Successfully');
+    res.json("User Deleted Successfully");
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: 'the user was not found' });
+        .json({ success: false, message: "the user was not found" });
     }
   } catch (error) {
     console.log(error);
@@ -95,7 +95,7 @@ const addBookToUser = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: 'User not found.' });
+        .json({ success: false, message: "User not found." });
     }
 
     const newBook = {
@@ -108,12 +108,12 @@ const addBookToUser = async (req, res) => {
 
     return res.json({
       success: true,
-      message: 'Book added to userBooks array successfully.',
+      message: "Book added to userBooks array successfully.",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: 'An error occurred while adding the book to userBooks array.',
+      message: "An error occurred while adding the book to userBooks array.",
     });
   }
 };

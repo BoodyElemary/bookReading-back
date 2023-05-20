@@ -3,11 +3,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 const mongoose = require("mongoose");
 const Router = require("./routes");
-const multer = require("multer");
 require("dotenv").config();
 const cors = require("cors");
 const compression = require("compression");
-
+app.use(express.static("."));
 app.use(
   cors({
     origin: "*",

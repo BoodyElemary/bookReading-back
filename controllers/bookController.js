@@ -1,15 +1,15 @@
-const BooksModel = require('../model/books');
-const CategoriesModel = require('../model/categories');
-const AuthorsModel = require('../model/authors');
-const fs = require('fs');
-const { error } = require('console');
+const BooksModel = require("../model/books");
+const CategoriesModel = require("../model/categories");
+const AuthorsModel = require("../model/authors");
+const fs = require("fs");
+const { error } = require("console");
 
 const getAll = async (req, res, next) => {
   try {
     const books = await BooksModel.find({}, { __v: 0 })
-      .populate('category')
-      .populate('author')
-      .populate('user_review.userID', { email: 0, password: 0, __v: 0 });
+      .populate("category")
+      .populate("author")
+      .populate("user_review.userID", { email: 0, password: 0, __v: 0 });
     res.json(books);
   } catch (error) {
     next(error);
@@ -20,9 +20,9 @@ const getOne = async (req, res) => {
   try {
     const bookID = req.params.id;
     const book = await BooksModel.findById({ _id: bookID }, { __v: 0 })
-      .populate('category')
-      .populate('author')
-      .populate('user_review.userID', { email: 0, password: 0, __v: 0 });
+      .populate("category")
+      .populate("author")
+      .populate("user_review.userID", { email: 0, password: 0, __v: 0 });
     if (book) {
       res.json({ Book: book });
     } else {
@@ -37,8 +37,14 @@ const addOne = async (req, res) => {
   try {
     const { bookName, rate, category, author, user_review } = req.body;
     const coverImg = req.file;
+    // if (!bookName || !rate || !category || !author) {
+    //   res.json("please enter valid data");
+    //   return;
+    // }
+
     if (!req.file) {
-      res.status(404).json('please upload a book cover');
+      res.status(404).json("please upload a book cover");
+      return;
     }
 
     // const book = await BooksModel(req.body);
@@ -58,7 +64,7 @@ const addOne = async (req, res) => {
       $push: { books: book._id },
     });
     await book.save();
-    res.json({ success: true, data: book, message: 'Book added successfully' });
+    res.json({ success: true, data: book, message: "Book added successfully" });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -70,7 +76,8 @@ const editOne = async (req, res) => {
     const { bookName, rate, category, author, user_review } = req.body;
     const coverImg = req.file;
     if (!req.file) {
-      res.status(404).json('please upload a book cover');
+      res.status(404).json("please upload a book cover");
+      return;
     }
 
     const bookCoverPath = await BooksModel.findById(bookID, {
@@ -90,11 +97,11 @@ const editOne = async (req, res) => {
         $set: { bookName, rate, category, author, user_review },
         cover: coverImg.path,
       },
-      { new: true },
+      { new: true }
     );
     res.json({
       success: true,
-      message: 'Book updated successfully',
+      message: "Book updated successfully",
       data: book,
     });
   } catch (error) {
@@ -118,7 +125,7 @@ const deleteOne = async (req, res) => {
     const book = await BooksModel.findByIdAndDelete(bookID);
     res.json({
       success: true,
-      message: 'Book Deleted successfully',
+      message: "Book Deleted successfully",
       data: book,
     });
   } catch (error) {
