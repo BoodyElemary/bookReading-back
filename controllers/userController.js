@@ -40,6 +40,7 @@ const addOne = async (req, res) => {
       password,
       Image: profileImg.path,
     });
+
     await user.save();
     res.json("User Created Successfully");
   } catch (error) {
@@ -122,38 +123,38 @@ const addBookToUser = async (req, res) => {
 const editBookStatus = async (req, res) => {
   const { bookId, status } = req.body;
   const userId = req.params.id;
-  res.json(userId);
+  // res.json(status);
 
-  // try {
-  //   const user = await UserModel.findById(userId);
-  //   if (!user) {
-  //     return res
-  //       .status(400)
-  //       .json({ success: false, message: 'User not found.' });
-  //   }
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found." });
+    }
+    const bookIndex = user.userBooks.findIndex(
+      (book) => book._id.toString() === bookId
+    );
+    if (bookIndex === -1) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Book not found." });
+    }
 
-  //   const bookIndex = user.userBooks.findIndex(
-  //     (book) => book._id.toString() === bookId,
-  //   );
-  //   if (bookIndex === -1) {
-  //     return res
-  //       .status(400)
-  //       .json({ success: false, message: 'Book not found.' });
-  //   }
+    user.userBooks[bookIndex].status = status;
+    await user.save();
 
-  //   user.userBooks[bookIndex].status = status;
-  //   await user.save();
-
-  //   return res.json({
-  //     success: true,
-  //     message: 'Book status updated successfully.',
-  //   });
-  // } catch (error) {
-  //   return res.status(500).json({
-  //     success: false,
-  //     message: 'An error occurred while updating the book status.',
-  //   });
-  // }
+    return res.json({
+      success: true,
+      message: "Book status updated successfully.",
+    });
+  } catch (error) {
+    res.json(error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the book status.",
+    });
+  }
 };
 
 module.exports = {
