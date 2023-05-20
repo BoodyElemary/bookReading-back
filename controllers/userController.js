@@ -85,4 +85,83 @@ const deleteOne = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, addOne, deleteOne, editOne };
+// addbooksReads to the user
+
+const addBookToUser = async (req, res) => {
+  const { book, status } = req.body;
+  const userId = req.params.id;
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'User not found.' });
+    }
+
+    const newBook = {
+      book: book,
+      status: status,
+    };
+
+    user.userBooks.push(newBook);
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: 'Book added to userBooks array successfully.',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while adding the book to userBooks array.',
+    });
+  }
+};
+
+//updateBookStatus
+const editBookStatus = async (req, res) => {
+  const { bookId, status } = req.body;
+  const userId = req.params.id;
+  res.json(userId);
+
+  // try {
+  //   const user = await UserModel.findById(userId);
+  //   if (!user) {
+  //     return res
+  //       .status(400)
+  //       .json({ success: false, message: 'User not found.' });
+  //   }
+
+  //   const bookIndex = user.userBooks.findIndex(
+  //     (book) => book._id.toString() === bookId,
+  //   );
+  //   if (bookIndex === -1) {
+  //     return res
+  //       .status(400)
+  //       .json({ success: false, message: 'Book not found.' });
+  //   }
+
+  //   user.userBooks[bookIndex].status = status;
+  //   await user.save();
+
+  //   return res.json({
+  //     success: true,
+  //     message: 'Book status updated successfully.',
+  //   });
+  // } catch (error) {
+  //   return res.status(500).json({
+  //     success: false,
+  //     message: 'An error occurred while updating the book status.',
+  //   });
+  // }
+};
+
+module.exports = {
+  getAll,
+  getOne,
+  addOne,
+  deleteOne,
+  editOne,
+  addBookToUser,
+  editBookStatus,
+};
