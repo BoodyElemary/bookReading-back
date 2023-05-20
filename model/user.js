@@ -27,6 +27,19 @@ const UserSchema = new mongoose.Schema({
   },
   password: String,
   Image: String,
+  userBooks: [
+    {
+      book: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Book',
+      },
+      status: {
+        type: String,
+        enum: ['read', 'currentlyReading', 'wantToRead'],
+        required: true,
+      },
+    },
+  ],
 });
 
 const UserModel = mongoose.model('User', UserSchema);

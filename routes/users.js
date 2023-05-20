@@ -18,4 +18,9 @@ router.delete('/:id', userController.deleteOne);
 //edit user
 router.put('/:id', uploadProfile.single('Image'), userController.editOne);
 
+//addBookToUser
+router.put('/addBookToUser/:id', userController.addBookToUser);
+//editbookStatus
+router.put('/editBookStatus/:id', userController.editBookStatus);
+
 module.exports = router;
