@@ -2,7 +2,6 @@ const BooksModel = require("../model/books");
 const CategoriesModel = require("../model/categories");
 const AuthorsModel = require("../model/authors");
 const fs = require("fs");
-const { error } = require("console");
 
 const getAll = async (req, res, next) => {
   try {
@@ -26,7 +25,7 @@ const getOne = async (req, res) => {
     if (book) {
       res.json({ Book: book });
     } else {
-      res.satatus(404).json({ message: "This Book Doesn't exist" });
+      res.status(404).json({ message: "This Book Doesn't exist" });
     }
   } catch (error) {
     res.status(500).json(error);

@@ -157,6 +157,45 @@ const editBookStatus = async (req, res) => {
   }
 };
 
+const removeBookFromUser = async (req, res) => {
+  const { bookId } = req.params;
+  const userId = req.params.id;
+
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found." });
+    }
+
+    const bookIndex = user.userBooks.findIndex(
+      (book) => book._id.toString() === bookId
+    );
+
+    if (bookIndex === -1) {
+      return res.status(400).json({
+        success: false,
+        message: "Book not found in userBooks array.",
+      });
+    }
+
+    user.userBooks.splice(bookIndex, 1);
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Book removed from userBooks array successfully.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message:
+        "An error occurred while removing the book from userBooks array.",
+    });
+  }
+};
+
 module.exports = {
   getAll,
   getOne,
@@ -165,4 +204,5 @@ module.exports = {
   editOne,
   addBookToUser,
   editBookStatus,
+  removeBookFromUser,
 };
