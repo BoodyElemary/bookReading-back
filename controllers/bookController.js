@@ -36,11 +36,6 @@ const addOne = async (req, res) => {
   try {
     const { bookName, rate, category, author, user_review } = req.body;
     const coverImg = req.file;
-    // if (!bookName || !rate || !category || !author) {
-    //   res.json("please enter valid data");
-    //   return;
-    // }
-
     if (!req.file) {
       res.status(404).json("please upload a book cover");
       return;

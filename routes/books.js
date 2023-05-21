@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
 const { uploadCover } = require('../middlewares/upload');
-
+const auth = require("./../middlewares/authentication");
 // Get All books
 router.get('/', bookController.getAll);
 
@@ -10,12 +10,12 @@ router.get('/', bookController.getAll);
 router.get('/:id', bookController.getOne);
 
 // add one book
-router.post('/', uploadCover.single('cover'), bookController.addOne);
+router.post('/', auth.adminIsLogin, uploadCover.single('cover'), bookController.addOne);
 
 // update one book
-router.put('/:id', uploadCover.single('cover'), bookController.editOne);
+router.put('/:id', auth.adminIsLogin, uploadCover.single('cover'), bookController.editOne);
 
 // delete one book
-router.delete('/:id', bookController.deleteOne);
+router.delete('/:id', auth.adminIsLogin, bookController.deleteOne);
 
 module.exports = router;

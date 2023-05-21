@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authorController = require("../controllers/authorController");
+const auth = require("./../middlewares/authentication");
 
 // Get All authors
 router.get("/", authorController.getAll);
@@ -9,12 +10,12 @@ router.get("/", authorController.getAll);
 router.get("/:id", authorController.getOne);
 
 // Post one author
-router.post("/", authorController.addOne);
+router.post("/", auth.adminIsLogin, authorController.addOne);
 
 // update one author
-router.put("/:id", authorController.editOne);
+router.put("/:id", auth.adminIsLogin, authorController.editOne);
 
 // delete one author
-router.delete("/:id", authorController.deleteOne);
+router.delete("/:id", auth.adminIsLogin, authorController.deleteOne);
 
 module.exports = router;
