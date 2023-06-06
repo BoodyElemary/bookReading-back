@@ -3,11 +3,11 @@ const CategoriesModel = require('../model/categories');
 const getAll = async (req, res) => {
   try {
     const categories = await CategoriesModel.find({}, { __v: 0 }).populate(
-      'books',
+      'books', {books:0, __v: 0}
     );
-    res.json(categories);
+    return res.json({"success": true, "data":categories, "message": "all categories data are retrieved"});
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
@@ -16,14 +16,14 @@ const getOne = async (req, res) => {
     const categoryID = req.params.id;
     const category = await CategoriesModel.findById({
       _id: categoryID,
-    }).populate('books');
+    }).populate('books', {books:0, __v: 0});
     if (category) {
-      res.json({ category: category });
+      return res.json({"success": true, "data":category, "message": "all category data is retrieved"});
     } else {
-      res.satatus(404).json({ message: "This Category Doesn't exist" });
+      res.satatus(404).json({ "success":false, message: "This Category Doesn't exist" });
     }
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
@@ -33,22 +33,22 @@ const addOne = async (req, res) => {
       categoryName: req.body.categoryName,
     });
     if (existCategory) {
-      res.json({ success: false, message: 'this category arleady exists' });
+      return res.json({ success: false, message: 'this category arleady exists' });
     } else {
       await CategoriesModel.create(req.body)
         .then((category) => {
-          res.json({
+          return res.json({
             success: true,
             message: 'category added successfully',
             data: category,
           });
         })
         .catch((error) => {
-          res.json({ success: false, errors: error });
+          return res.json({ success: false, message: error.message });
         });
     }
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
@@ -60,20 +60,20 @@ const editOne = async (req, res) => {
       _id: { $ne: categoryID },
     });
     if (existCategory) {
-      res.json({ success: false, message: 'this category arleady exists' });
+      return res.json({ success: false, message: 'this category arleady exists' });
     }
     const category = await CategoriesModel.findByIdAndUpdate(
       categoryID,
       { $set: req.body },
       { new: true },
     );
-    res.json({
+    return res.json({
       success: true,
       message: 'category updated successfully',
       data: category,
     });
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
@@ -81,9 +81,9 @@ const deleteOne = async (req, res) => {
   try {
     const categoryID = req.params.id;
     const category = await CategoriesModel.findByIdAndDelete(categoryID);
-    res.json({ message: 'category Deleted successfully', data: category });
+    return res.json({ success: true, message: 'category Deleted successfully', data: category });
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 

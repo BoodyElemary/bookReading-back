@@ -17,8 +17,17 @@ const userProfileStorage = multer.diskStorage({
   },
 });
 
+//author profile storage
+const authorProfileStorage = multer.diskStorage({
+  destination: 'uploads/authorProfile',
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
 const uploadCover = multer({ storage: bookCoverStorage });
-const uploadProfile = multer({ storage: userProfileStorage });
+const uploadUserProfile = multer({ storage: userProfileStorage });
+const uploadAuthorProfile = multer({ storage: authorProfileStorage });
 
 // exports
-module.exports = { uploadCover, uploadProfile };
+module.exports = { uploadCover, uploadUserProfile, uploadAuthorProfile };

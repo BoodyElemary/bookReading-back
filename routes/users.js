@@ -1,28 +1,32 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const { uploadProfile } = require("../middlewares/upload");
+const { uploadUserProfile } = require("../middlewares/upload");
+const auth = require("./../middlewares/authentication");
 
 //get all users
-router.get("/", userController.getAll);
+router.get("/", auth.adminIsLogin, userController.getAll);
+
 
 //get single user
-router.get("/:id", userController.getOne);
+router.get("/profile",  auth.isLogin, userController.getOne);
 
 //add user
-router.post("/", uploadProfile.single("Image"), userController.addOne);
-
-// delete user
-router.delete("/:id", userController.deleteOne);
-
-//edit user
-router.put("/:id", uploadProfile.single("Image"), userController.editOne);
+router.post("/", uploadUserProfile.single("Image"), userController.addOne);
 
 //addBookToUser
-router.put("/addBookToUser/:id", userController.addBookToUser);
+router.post("/addBookToUser", auth.isLogin, userController.addBookToUser);
+
 //editbookStatus
-router.put("/editBookStatus/:id", userController.editBookStatus);
+router.put("/editBookStatus", auth.isLogin, userController.editBookStatus);
+
 //remove book from user
-router.delete("/removeBook/:id", userController.removeBookFromUser);
+router.delete("/removeBook", auth.isLogin, userController.removeBookFromUser);
+
+//edit user
+router.put('/profile', auth.isLogin, uploadUserProfile.single("Image"), userController.editOne);
+
+// delete user
+router.delete('/profile', auth.isLogin, userController.deleteOne);
 
 module.exports = router;

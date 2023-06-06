@@ -38,6 +38,23 @@ const BooksSchema = new mongoose.Schema({
       },
     },
   ],
+  
+  user_rate: [
+    {
+      userID: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      rate: {
+        type: Number,
+        required: true,
+        max: 5,
+        min: 0,
+        default: 0,
+      },
+    },
+  ],
 });
 
 const BooksModels = mongoose.model('Book', BooksSchema);

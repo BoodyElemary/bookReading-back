@@ -1,57 +1,88 @@
 const authorsModel = require("../model/authors");
+const fs = require("fs");
 
 const getAll = async (req, res) => {
   try {
-    const authors = await authorsModel.find({}, { __v: 0 }).populate("books")
-    res.json(authors);
+    const authors = await authorsModel.find({}, { __v: 0 })
+    .populate("books", {category: 0, author: 0, __v: 0, user_review: 0, user_rate: 0})
+    return res.json({"success": true, "data": authors, "message": "authors data are retrieved all"});
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
 const getOne = async (req, res) => {
   try {
     const authorID = req.params.id;
-    const author = await authorsModel.findById({ _id: authorID }).populate("books")
+    const author = await authorsModel.findById({ _id: authorID })
+    .populate("books", {category: 0, author: 0, __v: 0, user_review: 0, user_rate: 0})
+
     if (author){
-      res.json({"author": author});
+      return res.json({"success": true , "data": author, "message": "author data is retrieved all"});
     }
     else{
-      res.satatus(404).json({"message": "This Author Doesn't exist"})
+      return res.status(404).json({"success": false, "message": "This Author Doesn't exist"})
     }
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
 const addOne = async (req, res) => {
   try {
-    await authorsModel.create(req.body)
-    .then((author)=>{res.json({"success": true, "message": "Author added successfully", "data": author });})
-    .catch((error)=>{res.json({"success": false, "errors": error});})
+    const {firstName, lastName, dateOfBirth} = req.body
+    const profileImg = req.file;
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "author image is required." });
+    }
+    await authorsModel.create({firstName, lastName, dateOfBirth, image: profileImg.path})
+    .then((author)=>{return res.json({"success": true, "message": "Author added successfully", "data": author });})
+    .catch((error)=>{return res.json({"success": false, "message": error.message});})
 
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
 const editOne = async (req, res) => {
   try {
     const authorID = req.params.id;
-    const author = await authorsModel.findByIdAndUpdate(authorID, {$set: req.body}, {new: true});
-    res.json({"success": true, "message":"Author updated successfully", "data": author});
+    const {firstName, lastName, dateOfBirth} = req.body
+    const profileImg = req.file;
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "author image is required." });
+    }
+    const authorImagePath = await authorsModel.findById(authorID, {
+      image: true
+    });
+    fs.unlink(authorImagePath.image, (error) => {
+      if (error) {
+        return res.status(500).json({"success": false, "massage": error.message});
+      }
+    });
+    const author = await authorsModel.findByIdAndUpdate(authorID, {$set: {lastName, firstName, dateOfBirth}, image: profileImg.path}, {new: true});
+    return res.json({"success": true, "message":"Author updated successfully", "data": author});
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 
 const deleteOne = async (req, res) => {
   try {
     const authorID = req.params.id;
+    const authorImagePath = await authorsModel.findById(authorID, {
+      image: true,
+      _id: false,
+    });
+    fs.unlink(authorImagePath.image, (error) => {
+      if (error) {
+        return res.status(500).json({"success": false, "massage": error.message});
+      }
+    });
     const author = await authorsModel.findByIdAndDelete(authorID);
-    res.json({"success": true, "message":"Author Deleted successfully"});
+    return res.json({"success": true, "message":"Author Deleted successfully"});
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({"success": false, "massage": error.message});
   }
 };
 

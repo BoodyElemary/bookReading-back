@@ -7,14 +7,13 @@ const booksRouter = require("./books");
 const categoriesRouter = require("./categories");
 const authorsRouter = require("./authors");
 const authenticationRoute = require("./authentication.routes");
-const authMW = require("./../middlewares/auth.mw");
-const auth = require("./../middlewares/authentication");
+const app = express()
+app.use(express.json())
 
-Router.use("/login", authenticationRoute);
-express().use(authMW);
-Router.use("/authors",auth.isLogin, authorsRouter);
+Router.use("/auth", authenticationRoute);
+Router.use("/authors", authorsRouter);
 Router.use("/users", usersRouter);
-Router.use("/books",auth.isLogin, booksRouter);
-Router.use("/categories", auth.isLogin, categoriesRouter);
+Router.use("/books", booksRouter);
+Router.use("/categories", categoriesRouter);
 
 module.exports = Router;
