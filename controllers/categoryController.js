@@ -18,7 +18,7 @@ const getOne = async (req, res) => {
       _id: categoryID,
     }).populate({
       path: 'books',
-      select: ['bookName', 'author'],
+      select: ['bookName','cover', 'author'],
       populate: [
         {
           path: 'author',
