@@ -19,11 +19,15 @@ const getOne = async (req, res) => {
     const user = await UserModel.findById({ _id: userId })
     .populate({
       path: 'userBooks.book',
-      select: '-category -author -user_review -__v',
-      populate: {
+      select: '-user_review -__v',
+      populate: [
+        {
         path: 'user_rate',
         match: { userID: userId },
-      },
+        },
+        { path: 'category', select: '-__v, -books' },
+        { path: 'author', select: '-__v, -books' },
+      ],
     });
     if (!user) {
       return res.status(404).json({success: false, message: "no such user"});
