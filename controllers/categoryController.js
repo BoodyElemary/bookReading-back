@@ -16,7 +16,16 @@ const getOne = async (req, res) => {
     const categoryID = req.params.id;
     const category = await CategoriesModel.findById({
       _id: categoryID,
-    }).populate('books', {books:0, __v: 0});
+    }).populate({
+      path: 'books',
+      select: ['bookName', 'author'],
+      populate: [
+        {
+          path: 'author',
+          select: ['firstName', 'lastName']
+        }
+      ]
+    });
     if (category) {
       return res.json({"success": true, "data":category, "message": "all category data is retrieved"});
     } else {

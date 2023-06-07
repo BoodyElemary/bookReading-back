@@ -30,7 +30,7 @@ exports.loginAdmin = async (req, res) => {
   try {
     const user = await adminModel.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(401).json({"success":false, "message": "YOU aren't admin."});
+      return res.status(401).json({"success":false, "message": "You aren't Admin."});
 
     } else if ((user.password == req.body.password)) {
       let token = jwt.sign(
