@@ -57,6 +57,6 @@ exports.registerAdmin = async (req, res)=>{
     .catch((error)=>{return res.json({"success": false, "message": error.message});})
 
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 }

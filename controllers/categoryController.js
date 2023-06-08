@@ -7,7 +7,7 @@ const getAll = async (req, res) => {
     );
     return res.json({"success": true, "data":categories, "message": "all categories data are retrieved"});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -32,7 +32,7 @@ const getOne = async (req, res) => {
       res.satatus(404).json({ "success":false, message: "This Category Doesn't exist" });
     }
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -57,7 +57,7 @@ const addOne = async (req, res) => {
         });
     }
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -82,7 +82,7 @@ const editOne = async (req, res) => {
       data: category,
     });
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -92,7 +92,7 @@ const deleteOne = async (req, res) => {
     const category = await CategoriesModel.findByIdAndDelete(categoryID);
     return res.json({ success: true, message: 'category Deleted successfully', data: category });
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 

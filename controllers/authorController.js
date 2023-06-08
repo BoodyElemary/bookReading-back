@@ -7,7 +7,7 @@ const getAll = async (req, res) => {
     .populate("books", {category: 0, author: 0, __v: 0, user_review: 0, user_rate: 0})
     return res.json({"success": true, "data": authors, "message": "authors data are retrieved all"});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -24,7 +24,7 @@ const getOne = async (req, res) => {
       return res.status(404).json({"success": false, "message": "This Author Doesn't exist"})
     }
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -40,7 +40,7 @@ const addOne = async (req, res) => {
     .catch((error)=>{return res.json({"success": false, "message": error.message});})
 
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -57,13 +57,13 @@ const editOne = async (req, res) => {
     });
     fs.unlink(authorImagePath.image, (error) => {
       if (error) {
-        return res.status(500).json({"success": false, "massage": error.message});
+        return res.status(500).json({"success": false, "message": error.message});
       }
     });
     const author = await authorsModel.findByIdAndUpdate(authorID, {$set: {lastName, firstName, dateOfBirth}, image: profileImg.path}, {new: true});
     return res.json({"success": true, "message":"Author updated successfully", "data": author});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -76,13 +76,13 @@ const deleteOne = async (req, res) => {
     });
     fs.unlink(authorImagePath.image, (error) => {
       if (error) {
-        return res.status(500).json({"success": false, "massage": error.message});
+        return res.status(500).json({"success": false, "message": error.message});
       }
     });
     const author = await authorsModel.findByIdAndDelete(authorID);
     return res.json({"success": true, "message":"Author Deleted successfully"});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 

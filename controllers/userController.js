@@ -9,7 +9,7 @@ const getAll = async (req, res) => {
     .populate("userBooks.book", {category: 0, author: 0, __v: 0, user_review: 0, user_rate: 0});
     return res.json({success: true, data: users, message: "all users data are retrieved"});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -34,7 +34,7 @@ const getOne = async (req, res) => {
     }
     res.json({success: true, data: user, message: "retrieved all user data"});
   } catch (error) {
-     return res.status(500).json({"success": false, "massage": error.message});
+     return res.status(500).json({"success": false, "message": error.message});
   }
 
 
@@ -59,7 +59,7 @@ const addOne = async (req, res) => {
     await user.save();
     return res.json({success: true, data: user, message: "User Created Successfully"});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -76,13 +76,13 @@ const editOne = async (req, res) => {
     });
     fs.unlink(userImagePath.Image, (error) => {
       if (error) {
-        return res.status(500).json({"success": false, "massage": error.message});
+        return res.status(500).json({"success": false, "message": error.message});
       }
     });
     const user = await UserModel.findByIdAndUpdate(userID, {$set: {lastName, firstName,  email, password}, Image: profileImg.path}, {new: true});
     return res.json({"success": true, "message":"profile updated successfully", "data": user});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -98,12 +98,12 @@ const deleteOne = async (req, res) => {
     });
     fs.unlink(userImagePath.Image, (error) => {
       if (error) {
-        return res.status(500).json({"success": false, "massage": error.message});
+        return res.status(500).json({"success": false, "message": error.message});
       }
     });
     res.json({success: true, message: "User Deleted Successfully", data: user});
   } catch (error) {
-     return res.status(500).json({"success": false, "massage": error.message});
+     return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -153,7 +153,7 @@ const editBookStatus = async (req, res) => {
       data: existUser,
     });
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 

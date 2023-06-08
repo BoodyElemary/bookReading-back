@@ -11,7 +11,7 @@ const getAll = async (req, res, next) => {
     .populate("user_review.userID", { email: 0, password: 0, __v: 0 });
     return res.json({success: true, data: books, message: "all books data are retrieved"});
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -28,7 +28,7 @@ const getOne = async (req, res) => {
       return res.status(404).json({ success: false, message: "This Book Doesn't exist" });
     }
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -59,7 +59,7 @@ const addOne = async (req, res) => {
     await book.save();
     return res.json({ success: true, data: book, message: "Book added successfully" });
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -96,7 +96,7 @@ const editOne = async (req, res) => {
       data: book,
     });
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -109,7 +109,7 @@ const deleteOne = async (req, res) => {
     });
     fs.unlink(bookCoverPath.cover, (error) => {
       if (error) {
-        return res.status(500).json({"success": false, "massage": error.message});
+        return res.status(500).json({"success": false, "message": error.message});
       }
     });
     const book = await BooksModel.findByIdAndDelete(bookID);
@@ -119,7 +119,7 @@ const deleteOne = async (req, res) => {
       data: book,
     });
   } catch (error) {
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 };
 
@@ -140,7 +140,7 @@ const addReview = async (req, res) =>{
     });
   }
   catch(error){
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 
 
@@ -164,7 +164,7 @@ const editReview = async (req, res) =>{
     });
   }
   catch(error){
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 
 
@@ -187,7 +187,7 @@ const deleteReview = async (req, res) =>{
     });
   }
   catch(error){
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 
 
@@ -211,7 +211,7 @@ const editRate = async (req, res) =>{
     });
   }
   catch(error){
-    return res.status(500).json({"success": false, "massage": error.message});
+    return res.status(500).json({"success": false, "message": error.message});
   }
 
 
