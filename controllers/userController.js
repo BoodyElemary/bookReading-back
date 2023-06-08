@@ -113,6 +113,8 @@ const addBookToUser = async (req, res) => {
   const { book, status } = req.body;
   const userID = req.userId;
   try {
+    // const existBook = await UserModel.findOne({_id: userID, 'userBooks.book': book})
+    // if (existBook){}
     const user = await UserModel.findByIdAndUpdate(userID,
       {$push: {userBooks: {book, status}}},  { new: true })
       .populate({
@@ -122,7 +124,7 @@ const addBookToUser = async (req, res) => {
           path: 'user_rate',
           match: { userID: userID },
         },
-      });;
+      });
     if (!user) {
       return res.status(400).json({ success: false, message: "User not found." });
     }

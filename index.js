@@ -9,7 +9,7 @@ const compression = require("compression");
 app.use(express.static("."));
 app.use(
   cors({
-    origin: "*",
+    origin: ["*", 'http://localhost:3000'],
     methods: ["OPTIONS", "GET", "POST", "DELETE", "PUT"],
     Headers: ["Content-Type", "Authorization"],
   })

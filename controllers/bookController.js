@@ -70,7 +70,7 @@ const editOne = async (req, res) => {
     const { bookName, rate, category, author, user_review } = req.body;
     const coverImg = req.file;
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "Profile image is required." });
+      return res.status(400).json({ success: false, message: "Cover image is required." });
     }
     const bookCoverPath = await BooksModel.findById(bookID, {
       cover: true
