@@ -1,4 +1,6 @@
 const authorsModel = require("../model/authors");
+const BooksModel = require("../model/books")
+const relationsHandler = require("./relationsController")
 const fs = require("fs");
 
 const getAll = async (req, res) => {
@@ -52,10 +54,10 @@ const editOne = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ success: false, message: "author image is required." });
     }
-    const authorImagePath = await authorsModel.findById(authorID, {
+    const existAuthor = await authorsModel.findById(authorID, {
       image: true
     });
-    fs.unlink(authorImagePath.image, (error) => {
+    fs.unlink(existAuthor.image, (error) => {
       if (error) {
         return res.status(500).json({"success": false, "message": error.message});
       }
@@ -70,17 +72,28 @@ const editOne = async (req, res) => {
 const deleteOne = async (req, res) => {
   try {
     const authorID = req.params.id;
-    const authorImagePath = await authorsModel.findById(authorID, {
+    const existAuthor = await authorsModel.findById(authorID, {
       image: true,
-      _id: false,
+      _id: true,
     });
-    fs.unlink(authorImagePath.image, (error) => {
-      if (error) {
-        return res.status(500).json({"success": false, "message": error.message});
-      }
-    });
-    const author = await authorsModel.findByIdAndDelete(authorID);
-    return res.json({"success": true, "message":"Author Deleted successfully"});
+
+    if(existAuthor){
+      books = await BooksModel.deleteMany({author: authorID})
+      // const author = await authorsModel.findByIdAndDelete(authorID);
+      // author.books.map((existBook, index)=>{
+      //   let userDeleted = relationsHandler.deleteBookFromUsers(existBook._id)
+      //   let bookDeleted = relationsHandler.deleteBookFromCategories(existBook._id)
+      // })
+      // fs.unlink(existAuthor.image, (error) => {
+      //   if (error) {
+      //     return res.status(500).json({"success": false, "message": error.message});
+      //   }
+      // });
+      return res.json({"success": true, "message":"Author Deleted successfully", "data": books});
+    }
+    return res.json({"success": false, "message":"Author Deleting failed"});
+
+
   } catch (error) {
     return res.status(500).json({"success": false, "message": error.message});
   }

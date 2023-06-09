@@ -1,4 +1,6 @@
+const BooksModel = require('../model/books');
 const CategoriesModel = require('../model/categories');
+const relationsHandler = require("./relationsController")
 
 const getAll = async (req, res) => {
   try {
@@ -89,8 +91,19 @@ const editOne = async (req, res) => {
 const deleteOne = async (req, res) => {
   try {
     const categoryID = req.params.id;
+    await BooksModel.deleteMany({category: categoryID})
     const category = await CategoriesModel.findByIdAndDelete(categoryID);
-    return res.json({ success: true, message: 'category Deleted successfully', data: category });
+    if (category){
+      category.books.map((existBook, index)=>{
+        let userDeleted = relationsHandler.deleteBookFromUsers(existBook._id)
+        let authorDeleted = relationsHandler.deleteBookFromAuthors(existBook._id)
+      })
+      return res.json({ success: true, message: 'category Deleted successfully', data: category });
+    }
+    else{
+      return res.json({ success: false, message: "category doesn't exist" });
+
+    }
   } catch (error) {
     return res.status(500).json({"success": false, "message": error.message});
   }

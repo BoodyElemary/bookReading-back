@@ -1,6 +1,8 @@
 const BooksModel = require("../model/books");
 const CategoriesModel = require("../model/categories");
 const AuthorsModel = require("../model/authors");
+const UserModel = require("../model/user");
+const relationsHandler = require("./relationsController")
 const fs = require("fs");
 
 const getAll = async (req, res, next) => {
@@ -103,21 +105,49 @@ const editOne = async (req, res) => {
 const deleteOne = async (req, res) => {
   try {
     const bookID = req.params.id;
-    const bookCoverPath = await BooksModel.findById(bookID, {
+    const existBook = await BooksModel.findById(bookID, {
       cover: true,
-      _id: false,
+      _id: true,
     });
-    fs.unlink(bookCoverPath.cover, (error) => {
-      if (error) {
-        return res.status(500).json({"success": false, "message": error.message});
+
+    if(existBook){
+
+      let userDeleted = relationsHandler.deleteBookFromUsers(existBook._id)
+      let authorDeleted = relationsHandler.deleteBookFromAuthors(existBook._id)
+      let bookDeleted = relationsHandler.deleteBookFromCategories(existBook._id)
+      if (userDeleted && authorDeleted && bookDeleted){
+        fs.unlink(existBook.cover, (error) => {
+          if (error) {
+            return res.status(500).json({"success": false, "message": error.message});
+          }
+        });
+
+        await existBook.deleteOne()
+        // await existBook.remove()
+        return res.json({
+          success: true,
+          message: "Book Deleted successfully",
+          data: existBook,
+        });
+
+      }else{
+        return res.json({
+          success: false,
+          message: "error in deleting the book",
+        });
       }
-    });
-    const book = await BooksModel.findByIdAndDelete(bookID);
-    return res.json({
-      success: true,
-      message: "Book Deleted successfully",
-      data: book,
-    });
+
+    }
+    else{
+      return res.json({
+        success: false,
+        message: "Book doesn't Exist",
+      });
+    }
+    // const book = await BooksModel.findById(bookID);
+
+
+
   } catch (error) {
     return res.status(500).json({"success": false, "message": error.message});
   }
